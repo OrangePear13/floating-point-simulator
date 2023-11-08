@@ -3,16 +3,13 @@
 
 #include <iostream>
 #include <stdexcept>
-#include <bitset>
-
-typedef std::bitset<sizeof(long)> LongBits;
 
 class Bits
 {
   private:
     size_t size;
     bool* bits;
-  
+
   public:
     Bits(const size_t& s);
 
@@ -20,23 +17,59 @@ class Bits
 
     Bits(const size_t& s, const long& b);
 
-    bool lsl(const unsigned short& n);
+    Bits(const Bits& b);
 
-    bool lsr(const unsigned short& n);
+    Bits& operator=(const Bits& r);
 
-    bool asl(const unsigned short& n);
+    Bits& operator+=(const Bits& r);
 
-    bool asr(const unsigned short& n);
+    Bits& operator-=(const Bits& r);
 
-    void bwAnd(const Bits& b);
+    Bits& operator<<=(const unsigned char& n);
 
-    void bwOr(const Bits& b);
+    Bits& operator>>=(const unsigned char& n);
 
-    void bwCmp();
+    Bits& operator++();
 
-    void bwXor(const Bits& b);
+    Bits operator++(int);
 
-    bool add(const Bits& b);
+    Bits& operator--();
+
+    Bits operator--(int);
+
+  private:
+
+    friend Bits operator+(const Bits& l, const Bits& r);
+
+    friend Bits operator-(const Bits& l, const Bits& r);
+
+    friend Bits operator-(const Bits& b);
+
+    friend Bits operator~(const Bits& b);
+
+    friend Bits operator&(const Bits& l, const Bits& r);
+
+    friend Bits operator|(const Bits& l, const Bits& r);
+
+    friend Bits operator^(const Bits& l, const Bits& r);
+
+    friend Bits operator<<(const Bits& b, const unsigned char& n);
+
+    friend Bits operator>>(const Bits& b, const unsigned char& n);
+
+    friend bool operator==(const Bits& l, const Bits& r);
+
+    friend bool operator!=(const Bits& l, const Bits& r) {return !(l == r);}
+
+    friend bool operator<(const Bits& l, const Bits& r);
+
+    friend bool operator>(const Bits& l, const Bits& r) {return r < l;}
+
+    friend bool operator<=(const Bits& l, const Bits& r) {return !(l > r);}
+
+    friend bool operator>=(const Bits& l, const Bits& r) {return !(l < r);}
+
+    friend std::ostream& operator<<(std::ostream& os, const Bits& b);
 };
 
 #endif
