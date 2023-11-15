@@ -1,5 +1,5 @@
 // CpE 3110 FS23 Honors Project
-// File: floating.h
+// File: ibmFloat.h
 // Author: Nathan Mejia
 #ifndef IBM_FLOAT_H
 #define IBM_FLOAT_H
@@ -23,7 +23,7 @@ typedef std::bitset<IBM_LEN>  ibmb;
 typedef std::bitset<MANT_LEN> ibmm;
 typedef std::bitset<EXP_LEN>  ibme;
 
-const ibmm MANT_MSD_MSK = ibmm(0xffffff << (MANT_LEN - BASE_SZ));
+const ibmm MANT_MSD_MSK = ibmm(0xffffffULL << (MANT_LEN - BASE_SZ));
 
 class IBMFloat
 {

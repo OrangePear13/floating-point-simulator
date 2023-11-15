@@ -1,3 +1,6 @@
+// CpE 3110 FS23 Honors Project
+// File: ibmFloat.cpp
+// Author: Nathan Mejia
 #include "ibmFloat.h"
 
 IBMFloat::IBMFloat(const std::string& b)
@@ -185,6 +188,7 @@ IBMFloat& IBMFloat::operator+=(const IBMFloat& b)
     {
       this_mant >>= BASE_SZ;
       this_mant.set(MANT_LEN-BASE_SZ);
+      this_exp = this_exp + ibme(1);
     }
   }
 
@@ -193,7 +197,7 @@ IBMFloat& IBMFloat::operator+=(const IBMFloat& b)
   while (!(this_mant & MANT_MSD_MSK).any())
   {
     this_mant <<= BASE_SZ;
-    this_exp = this_exp + ibme(1);
+    this_exp = this_exp - ibme(1);
   }
 
   setMant(this_mant);
