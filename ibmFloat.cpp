@@ -1,5 +1,105 @@
 #include "ibmFloat.h"
 
+IBMFloat::IBMFloat(const std::string& b)
+{
+  for (size_t i = 0; i < b.size(); ++i)
+  {
+    if ((i+1)*4 - 1 >= IBM_LEN)
+    {
+      return;
+    }
+
+    auto assignBits = [this, &i](unsigned short h) {
+      bits[i*4  ] = (h & 0b0001);
+      bits[i*4+1] = (h & 0b0010);
+      bits[i*4+2] = (h & 0b0100);
+      bits[i*4+3] = (h & 0b1000);
+    };
+    
+    switch (b[b.size() - i - 1])
+    {
+    case '0':
+      assignBits(0x0);
+      break;
+    case '1':
+      assignBits(0x1);
+      break;
+    case '2':
+      assignBits(0x2);
+      break;
+    case '3':
+      assignBits(0x3);
+      break;
+    case '4':
+      assignBits(0x4);
+      break;
+    case '5':
+      assignBits(0x5);
+      break;
+    case '6':
+      assignBits(0x6);
+      break;
+    case '7':
+      assignBits(0x7);
+      break;
+    case '8':
+      assignBits(0x8);
+      break;
+    case '9':
+      assignBits(0x9);
+      break;
+    case 'A':
+    case 'a':
+      assignBits(0xa);
+      break;
+    case 'B':
+    case 'b':
+      assignBits(0xb);
+      break;
+    case 'C':
+    case 'c':
+      assignBits(0xc);
+      break;
+    case 'D':
+    case 'd':
+      assignBits(0xd);
+      break;
+    case 'E':
+    case 'e':
+      assignBits(0xe);
+      break;
+    case 'F':
+    case 'f':
+      assignBits(0xf);
+      break;
+    default:
+      return;
+    }
+  }
+}
+
+double IBMFloat::toNativeFloat() const
+{
+  auto mantToFlt = [this]() -> double {
+    double mantissa = 0.0;
+    for (size_t i = 0; i < MANT_LEN; ++i)
+    {
+      mantissa += this->mant()[i] / double(1 << (MANT_LEN-i));
+    }
+    return mantissa;
+  };
+  auto expToInt = [this]() -> short {
+    short exponent = 0;
+    for (size_t i = 0; i < EXP_LEN; ++i)
+    {
+      exponent += this->exp()[i] << i;
+    }
+    return exponent - EXP_BIAS;
+  };
+
+  return (sign()? -1: 1) * mantToFlt() * std::pow(EXP_BASE, expToInt());
+}
+
 ibmm IBMFloat::mant() const
 {
   ibmm m;
@@ -122,10 +222,10 @@ bool operator<(const std::bitset<N>& lhs, const std::bitset<N>& rhs)
 {
   for (size_t i = 0; i < lhs.size(); ++i)
   {
-    if (lhs[i] && !rhs[i])
+    if (lhs[lhs.size()-i-1] && !rhs[lhs.size()-i-1])
       return false;
     
-    if (!lhs[i] && rhs[i])
+    if (!lhs[lhs.size()-i-1] && rhs[lhs.size()-i-1])
       return true;
   }
   return false;

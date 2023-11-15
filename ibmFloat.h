@@ -7,12 +7,13 @@
 #include <iostream>
 #include <string>
 #include <bitset>
+#include <math.h>
 
 const unsigned short EXP_LEN  = 7 ;
 const unsigned short MANT_LEN = 24;
 const unsigned short EXP_BIAS = 64;
 const unsigned short EXP_BASE = 16;
-const unsigned short BASE_SZ  = 4 ; // x * 16**n == x << 4*n
+const unsigned short BASE_SZ  = 4 ; // x * 16**n == x << 1*n
 const unsigned short IBM_LEN  = 32; // EXP_LEN + MANT_LEN + 1 (+1 is sign bit)
 const unsigned short SIGN_IDX = 31; // IBM_LEN - 1
 const unsigned short EXP_IDX  = 24; // IBM_LEN - 1 - EXP_LEN
@@ -38,9 +39,13 @@ class IBMFloat
 
   IBMFloat(const uint32_t& b) noexcept: bits(b) {}
 
+  IBMFloat(const std::string& b);
+
   IBMFloat& operator=(const IBMFloat& b) {bits = b.bits; return *this;}
 
   IBMFloat operator-() const {return IBMFloat(ibmb(this->bits).flip(SIGN_IDX));}
+
+  double toNativeFloat() const;
 
   ibmb toBits() const {return bits;}
 
@@ -63,16 +68,16 @@ class IBMFloat
   IBMFloat& operator-=(const IBMFloat& b) {*this += -b; return *this;}
 };
 
-IBMFloat operator+(IBMFloat lhs, const IBMFloat& rhs) {return lhs += rhs;}
+inline IBMFloat operator+(IBMFloat lhs, const IBMFloat& rhs) {return lhs += rhs;}
 
-IBMFloat operator-(IBMFloat lhs, const IBMFloat& rhs) {return lhs -= rhs;}
+inline IBMFloat operator-(IBMFloat lhs, const IBMFloat& rhs) {return lhs -= rhs;}
 
 template<std::size_t N>
 std::bitset<N> operator+(const std::bitset<N>& lhs, const std::bitset<N>& rhs);
 
 template<std::size_t N>
 std::bitset<N> operator-(const std::bitset<N>& lhs, const std::bitset<N>& rhs)
-{return lhs + ~rhs + std::bitset<N>(1);}
+{return lhs + (~rhs + std::bitset<N>(1));}
 
 // Performs unsigned numerical comparison
 template<std::size_t N>
