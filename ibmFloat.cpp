@@ -212,7 +212,7 @@ std::bitset<N> operator+(const std::bitset<N>& lhs, const std::bitset<N>& rhs)
   std::bitset<N> sum;
   bool carry = 0;
 
-  for (size_t i = 0; i < lhs.size(); ++i)
+  for (size_t i = 0; i < N; ++i)
   {
     sum[i] = lhs[i] != rhs[i] != carry;
     carry = (lhs[i] && rhs[i]) || (lhs[i] && carry) || (rhs[i] && carry);
@@ -224,12 +224,12 @@ std::bitset<N> operator+(const std::bitset<N>& lhs, const std::bitset<N>& rhs)
 template<std::size_t N>
 bool operator<(const std::bitset<N>& lhs, const std::bitset<N>& rhs)
 {
-  for (size_t i = 0; i < lhs.size(); ++i)
+  for (size_t i = 0; i < N; ++i)
   {
-    if (lhs[lhs.size()-i-1] && !rhs[lhs.size()-i-1])
+    if (lhs[N-i-1] && !rhs[N-i-1])
       return false;
     
-    if (!lhs[lhs.size()-i-1] && rhs[lhs.size()-i-1])
+    if (!lhs[N-i-1] && rhs[N-i-1])
       return true;
   }
   return false;

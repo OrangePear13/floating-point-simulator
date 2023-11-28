@@ -14,5 +14,5 @@ debug: $(OBJS) ibmFloat.h
 
 .PHONY: clean
 clean:
-	rm $(OBJS)
-	rm $(TARGET_EXEC)
+	@rm $(OBJS)
+	@rm project debug
