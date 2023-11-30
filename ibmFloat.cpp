@@ -154,7 +154,10 @@ IBMFloat& IBMFloat::operator+=(const IBMFloat& b)
   if (this_exp >= b_exp)
     b_mant >>= BASE_SZ * (this_exp - b_exp).to_ulong();
   else
+  {
     this_mant >>= BASE_SZ * (b_exp - this_exp).to_ulong();
+    this_exp = b_exp;
+  }
   
   // perform addition on different signs
   if (sign() != b.sign())
@@ -204,6 +207,93 @@ IBMFloat& IBMFloat::operator+=(const IBMFloat& b)
   setExp(this_exp);
 
   return *this;
+}
+
+std::ostream& operator<<(std::ostream& os, const IBMFloat& num)
+{
+  std::string hex;
+
+  for (size_t i = 0; i < IBM_LEN; i+=BASE_SZ)
+  {
+    if (num.bits[i+3] == 0)
+    {
+      if (num.bits[i+2] == 0)
+      {
+        if (num.bits[i+1] == 0)
+        {
+          if (num.bits[i] == 0)
+            hex = "0" + hex;
+          else
+            hex = "1" + hex;
+        }
+        else
+        {
+          if (num.bits[i] == 0)
+            hex = "2" + hex;
+          else
+            hex = "3" + hex;
+        }
+      }
+      else
+      {
+        if (num.bits[i+1] == 0)
+        {
+          if (num.bits[i] == 0)
+            hex = "4" + hex;
+          else
+            hex = "5" + hex;
+        }
+        else
+        {
+          if (num.bits[i] == 0)
+            hex = "6" + hex;
+          else
+            hex = "7" + hex;
+        }
+      }
+    }
+    else
+    {
+      if (num.bits[i+2] == 0)
+      {
+        if (num.bits[i+1] == 0)
+        {
+          if (num.bits[i] == 0)
+            hex = "8" + hex;
+          else
+            hex = "9" + hex;
+        }
+        else
+        {
+          if (num.bits[i] == 0)
+            hex = "A" + hex;
+          else
+            hex = "B" + hex;
+        }
+      }
+      else
+      {
+        if (num.bits[i+1] == 0)
+        {
+          if (num.bits[i] == 0)
+            hex = "C" + hex;
+          else
+            hex = "D" + hex;
+        }
+        else
+        {
+          if (num.bits[i] == 0)
+            hex = "E" + hex;
+          else
+            hex = "F" + hex;
+        }
+      }
+    }
+  }
+  
+  os << hex;
+
+  return os;
 }
 
 template<std::size_t N>

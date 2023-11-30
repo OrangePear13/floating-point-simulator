@@ -92,6 +92,9 @@ class IBMFloat
 
   // trivially addition with the negation of the rhs
   IBMFloat& operator-=(const IBMFloat& b) {*this += -b; return *this;}
+
+  // print full number in hex form
+  friend std::ostream& operator<<(std::ostream& os, const IBMFloat& num);
 };
 
 // non assignment version of addition (doesnt modify original object)
